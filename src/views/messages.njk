@@ -1,0 +1,66 @@
+{% extends "base.njk" %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+  <img class="d-block mx-auto mb-4" src="/img/logo.png" alt="" height="57">
+  <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+    <a class="btn btn-primary btn-lg px-4 gap-3" href="/">Home</a>
+    <a class="btn btn-primary btn-lg px-4 gap-3" href="/edit/messages">Add New -></a>
+  </div>
+  <h1 class="display-5 fw-bold">Messages</h1>
+</div>
+<div class="list-group px-4 py-5 my-5">
+  {% for message in messages %}
+    <a href="/edit/{{message.id}}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+      <img src="{{message.gif}}" alt="twbs" width="256" height="256" class="flex-shrink-0">
+      <div class="d-flex gap-2 w-100 justify-content-between">
+        <div>
+          <h6 class="mb-0">{{message.occasion.name}}</h6>
+          <p class="mb-0 opacity-75">{{message.message}}</p>
+        </div>
+        <small class="opacity-50 text-nowrap" id="time-{{message.id}}"></small>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function timeSince(date) {
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = seconds / 31536000;
+
+    if (interval > 1) {
+      return Math.floor(interval) + " years";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+      return Math.floor(interval) + " months";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+      return Math.floor(interval) + " days";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+      return Math.floor(interval) + " hours";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+      return Math.floor(interval) + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
+  }
+  function setTimeSince(id, dateString) {
+    const d = document.getElementById(`time-${id}`);
+    console.log(d, id, dateString)
+    const date = Date.parse(dateString);
+    d.innerHTML = `modified ${timeSince(date)} ago`;
+  }
+  {% for message in messages %}
+  setTimeSince('{{message.id}}', '{{message.lastModified}}');
+  {% endfor %}
+</script>
+{% endblock %}

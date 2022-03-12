@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ravendb-hs-pvc
+spec:
+  storageClassName: dynamic-storage
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ravendb-hs
+spec:
+  selector:
+    matchLabels:
+      app: ravendb-hs
+  template:
+    metadata:
+      labels:
+        app: ravendb-hs
+    spec:
+      containers:
+      - name: ravendb-hs
+        image: ravendb/ravendb
+        env:
+          - name: RAVEN_Security_UnsecuredAccessAllowed
+            value: PrivateNetwork
+          - name: RAVEN_License_Eula_Accepted
+            value: "true"
+          - name: RAVEN_Setup_Mode
+            value: None
+        volumeMounts:
+          - name: data-volume
+            mountPath: /opt/RavenDB/Server/RavenData
+        resources:
+          requests:
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: ravendb-hs-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ravendb-hs
+spec:
+  selector:
+    app: ravendb-hs
+  ports:
+  - port: 8080
+    targetPort: 8080

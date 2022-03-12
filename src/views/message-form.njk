@@ -1,0 +1,28 @@
+{% extends "base.njk" %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+  <img class="d-block mx-auto mb-4" src="/img/logo.png" alt="" height="57">
+  <h1 class="display-5 fw-bold">{% if message %} Edit Message {% else %} Create a Message {% endif %}</h1>
+</div>
+<form class="p-4 p-md-5 m-4 border rounded-3 bg-light" action="{% if message %} /{{message.id}} {% else %} /messages {% endif %}" method="POST">
+  <div class="form-floating mb-3">
+    <select class="form-select" id="occasion" name="occasion" value="{{message.occasion}}" required>
+      <option value="">Choose Occasion</option>
+      {% for occasion in occasions %}
+        <option {% if occasion.id == message.occasion %} selected {% endif %} value="{{occasion.id}}">{{occasion.name}}</option>
+      {% endfor %}
+    </select>
+    <label for="occasion">Occasion</label>
+  </div>
+  <div class="form-group mb-3">
+    <textarea class="form-control" id="message" name="message" rows="4" required>{{message.message}}</textarea>
+  </div>
+  <div class="form-floating mb-3">
+    <input type="text" class="form-control" id="gif" name="gif" value="{{message.gif}}" required>
+    <label for="gif">GIF</label>
+  </div>
+  <hr class="my-4">
+  <button class="w-100 btn btn-lg btn-primary" type="submit">Save</button>
+</form>
+{% endblock %}

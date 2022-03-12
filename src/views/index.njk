@@ -1,0 +1,35 @@
+{% extends "base.njk" %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+  <img class="d-block mx-auto mb-4" src="img/logo.png" alt="" height="57">
+  <a class="btn btn-primary btn-lg px-4 gap-3" href="/messages">Edit -></a>
+  <h1 class="display-5 fw-bold">Message Generator</h1>
+  <div class="col-lg-6 mx-auto">
+    <p class="lead mb-4">Quickly send a request for the message that corresponds to the occasion:</p>
+    <div class="form-floating mb-4">
+      <input type="text" class="form-control" id="familyMember">
+      <label for="familyMember">HS Family Member</label>
+    </div>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+      {% for occasion in occasions %}
+        <button type="button" class="btn btn-outline-primary btn-lg px-4 gap-3" onclick="requestMessage('{{occasion.id}}')()">{{occasion.name}}</button>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="list-group px-4 py-5 my-5">
+    {% for message in messages %}
+      {{message.message}} {{message.gif}}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const requestMessage = occasion => e => {
+    const familyMember = document.getElementById('familyMember').value;
+    window.location.href = `/${familyMember}?occasion=${occasion}`;
+  }
+</script>
+{% endblock %}
