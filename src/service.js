@@ -1,6 +1,7 @@
 const { DocumentStore } = require('ravendb');
 
-const store = new DocumentStore('http://localhost:8080', 'HS');
+const store = new DocumentStore(process.env.DATABASE_URL || 'http://localhost:8080',
+  process.env.DATABASE_NAME || 'HS');
 store.initialize();
 
 async function getAllOccasions() {

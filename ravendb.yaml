@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: ravendb-hs-pvc
 spec:
-  storageClassName: dynamic-storage
+  storageClassName: local-path
   volumeMode: Filesystem
   resources:
     requests:
