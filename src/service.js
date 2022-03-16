@@ -6,13 +6,13 @@ store.initialize();
 
 async function getAllOccasions() {
   const session = store.openSession();
-  return await session.query({ collection: 'occasions'}).all();
+  return session.query({ collection: 'occasions'}).all();
 }
 
 async function getAllMessages() {
   const session = store.openSession();
   const messages = await session.query({ collection: 'messages'}).all();
-  return await Promise.all(messages.map(async (m) => ({
+  return Promise.all(messages.map(async (m) => ({
     ...m,
     lastModified: m['@metadata']['@last-modified'],
     occasion: await session.load(m.occasion)
@@ -21,14 +21,14 @@ async function getAllMessages() {
 
 async function getMessagesFor(occasion) {
   const session = store.openSession();
-  return await session.query({ collection: 'messages'})
+  return session.query({ collection: 'messages'})
     .whereEquals("occasion", occasion)
     .all();
 }
 
 async function getMessage(messageId) {
   const session = store.openSession();
-  return await session.load(`messages/${messageId}`);
+  return session.load(`messages/${messageId}`);
 }
 
 async function updateMessage(messageId, message) {
